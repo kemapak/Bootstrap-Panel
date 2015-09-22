@@ -1,0 +1,52 @@
+<!doctype html>
+<head>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.css" />
+
+  <link rel="stylesheet" href="src/common/directives/panel/panel.css" />
+
+  <script src="lib/angular/angular.js"></script>
+</head>
+<body data-ng-app="panelDemo">
+<header>
+  <h1>Angular UI Bootstrap Panel</h1>
+  <h2>Demo</h2>
+</header>
+<main data-ng-controller="PanelDemoController as ctrl">
+  <ui-panel id="simplePanel" data-ng-class="panel-{{model.panelState}}" data-config="model.panelConfig">
+    <ui-panel-header data-title="This is title">
+      <button>click</button>
+    </ui-panel-header>
+    This is panel
+  </ui-panel>
+</main>
+<footer></footer>
+<script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="src/common/directives/directiveModule.js"></script>
+<script src="src/common/directives/panel/panelService.js"></script>
+<script src="src/common/directives/panel/panel.js"></script>
+<script>
+  angular.module('panelDemo', ['ui.bootstrap', 'directiveModule']).controller('PanelDemoController', ['$scope', function($scope){
+
+    var panelConfig = {
+      collapse: {
+        isCollapsible: true,
+        isInitiallyCollapsed: true
+      }
+
+    };
+
+    var model = {
+      panelState: 'default',
+      panelConfig: panelConfig
+    }
+    $scope.model = model;
+
+    return {
+
+
+    }
+  }]);
+</script>
+</body>
+
