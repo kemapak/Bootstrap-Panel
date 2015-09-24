@@ -1,5 +1,7 @@
 <!doctype html>
+<html>
 <head>
+  <title>Bootstrap Panel Directive Demo</title>
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.css" />
 
@@ -7,17 +9,22 @@
 
   <script src="lib/angular/angular.js"></script>
 </head>
-<body data-ng-app="panelDemo">
+<body data-ng-app="panelDemo" class="container">
 <header>
   <h1>Angular UI Bootstrap Panel</h1>
   <h2>Demo</h2>
 </header>
 <main data-ng-controller="PanelDemoController as ctrl">
-  <ui-panel id="simplePanel" data-ng-class="panel-{{model.panelState}}" data-config="model.panelConfig">
+  <ui-panel id="simplePanel" data-state="model.panelState" data-config="model.panelConfig" data-show="model.panelConfig.show">
     <ui-panel-header data-title="This is title">
       <button>click</button>
     </ui-panel-header>
-    This is panel
+    <ui-panel-body>
+      This is panel
+    </ui-panel-body>
+    <ui-panel-footer>
+      This is the footer
+    </ui-panel-footer>
   </ui-panel>
 </main>
 <footer></footer>
@@ -29,11 +36,8 @@
   angular.module('panelDemo', ['ui.bootstrap', 'directiveModule']).controller('PanelDemoController', ['$scope', function($scope){
 
     var panelConfig = {
-      collapse: {
-        isCollapsible: true,
-        isInitiallyCollapsed: true
-      }
-
+      show: false,
+      someOtherConfig: {}
     };
 
     var model = {
@@ -49,4 +53,4 @@
   }]);
 </script>
 </body>
-
+</html>

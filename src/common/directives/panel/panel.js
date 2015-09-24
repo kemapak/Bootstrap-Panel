@@ -6,43 +6,99 @@
  * @description
  * AngularJS version of the panels directive.
  */
-directiveModule.directive('uiPanel', ['panelService', function(panelService){
+directiveModule.directive('uiPanel', ['panelService', function (panelService) {
 
     return {
-        restrict: 'E',
-        transclude: true,
-        replace: true,
-        scope: {
-            id: '@',
-            config: '='
+        restrict: 'E', transclude: true, replace: true, scope: {
+            id: '@', class: '=state', config: '=', show: '='
+        }, template: '<div class="panel panel-{{class}}" data-ng-transclude=""></div>', controller: function ($scope, $element, $attrs) {
+
+            var toggleBody = function (isShown) {
+
+                if (null !== $element[0].querySelector('.panel > .panel-body')) {
+
+                    var body = angular.element($element[0].querySelector('.panel > .panel-body'));
+
+                    if (!isShown) {
+
+                        body.removeClass('hidden fade');
+                        body.addClass('show');
+                    } else {
+
+                        body.removeClass('show');
+                        body.addClass('hidden fade');
+                    }
+                }
+            };
+
+            var toggleFooter = function (isShown) {
+
+                if (null !== $element[0].querySelector('.panel > .panel-footer')) {
+
+                    var footer = angular.element($element[0].querySelector('.panel > .panel-footer'));
+
+                    if (!isShown) {
+
+                        footer.removeClass('hidden fade');
+                        footer.addClass('show');
+                    } else {
+
+                        footer.removeClass('show');
+                        footer.addClass('hidden fade');
+                    }
+                }
+            };
+
+            var togglePanel = function (isShown) {
+
+                toggleBody(isShown);
+                toggleFooter(isShown);
+            }
+
+            // Variable in closure scope (private).
+            var _show = true;
+
+            // Get the
+            this.isItVisible = function () {
+
+                return _show;
+            }
+
+            this.showPanel = function () {
+
+                _show = true;
+
+                togglePanel(_show);
+            }
+
+            this.hidePanel = function () {
+
+                _show = false;
+
+                togglePanel(_show);
+            }
+
+            this.togglePanel = function () {
+
+                _show = !_show;
+
+                togglePanel(_show);
+            }
+
+            // If show is defined in scope use it. Otherwise assume it is true (_show is initialized above).
+            if (undefined !== typeof $scope.show) {
+
+                _show = $scope.show;
+            }
         },
-        template: '<div class="panel" data-ng-transclude=""></div>',
-        controller: function($scope) {
 
-            this.showPanel = function() {
+        link: function (scope, element, attrs) {
 
-                $scope.show = true;
-                return 'show';
-            }
-
-            this.hidePanel = function() {
-
-                $scope.show = false;
-                return 'hidden';
-            }
-
-            this.alert = function() {
-                alert('test');
-            }
-        },
-
-        link: function(scope, element, attrs) {
-
-            // Decorate the element with the ID if exists.
-            if (undefined !== typeof scope.id && scope.id.trim().length > 0) {
-
-                element.attr('id', scope.id);
-            }
+            //// Decorate the element with the ID if exists.
+            //if (undefined !== typeof scope.id && scope.id.trim().length > 0) {
+            //
+            //    element.attr('id', scope.id);
+            //}
         }
     };
 
@@ -56,7 +112,7 @@ directiveModule.directive('uiPanel', ['panelService', function(panelService){
  * @description
  * AngularJS version of the panels header directive.
  */
-directiveModule.directive('uiPanelHeader', function(){
+directiveModule.directive('uiPanelHeader', function () {
 
     return {
         require: '^uiPanel',
@@ -64,24 +120,21 @@ directiveModule.directive('uiPanelHeader', function(){
         transclude: true,
         replace: true,
         scope: {
-            title: '@',
-            config: '=',
-            class: '@'
+            title: '@', config: '='
         },
-        template: '<div class="panel-heading">' +
-                  '    <div class="col-sm-6"><h5><span class="glyphicon glyphicon-chevron-right"></span>{{title}}</h5></div>' +
-                  '    <div class="col-sm-6" data-ng-transclude=""></div>' +
-                  '</div>',
+        template: '<div class="panel-heading">' + '    <div class="row">' + '        <div class="col-xs-6" data-ng-click="togglePanel();"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;<span class="panel-title">{{title}}</span></div>' + '        <div class="col-xs-6"><div class="pull-right" data-ng-transclude=""></div></div>' + '    </div>' + '</div>',
 
-        link: function(scope, element, attrs, panelController) {
+        link: function (scope, element, attrs, panelController) {
 
+            if (!panelController.isItVisible()) {
 
+                panelController.hidePanel();
+            }
 
-            panelController.alert();
+            scope.togglePanel = function () {
 
-            //element[0].appendChild(titleElement);
-
-
+                panelController.togglePanel();
+            }
         }
 
     };
@@ -95,27 +148,19 @@ directiveModule.directive('uiPanelHeader', function(){
  * @description
  * AngularJS version of the panels header directive.
  */
-directiveModule.directive('uiPanelBody', function(){
+directiveModule.directive('uiPanelBody', function () {
 
     return {
-        require: '^uiPanel',
-        restrict: 'E',
-        transclude: true,
-        replace: true,
-        scope: {
-            title: '@',
-            config: '=',
-            class: '@'
-        },
-        template: '<div class="panel-body" data-ng-transclude="">',
+        require: '^uiPanel', restrict: 'E', transclude: true, replace: true, scope: {
+            title: '@', config: '=', class: '@'
+        }, template: '<div class="panel-body" data-ng-transclude="">',
 
-        link: function(scope, element, attrs, panelController) {
+        link: function (scope, element, attrs, panelController) {
 
+            if (!panelController.isItVisible()) {
 
-
-
-
-
+                panelController.hidePanel();
+            }
         }
 
     };
@@ -129,27 +174,14 @@ directiveModule.directive('uiPanelBody', function(){
  * @description
  * AngularJS version of the panels footer directive.
  */
-directiveModule.directive('uiPanelFooter', function(){
+directiveModule.directive('uiPanelFooter', function () {
 
     return {
-        require: '^uiPanel',
-        restrict: 'E',
-        transclude: true,
-        replace: true,
-        scope: {
-            config: '=',
-            class: '@'
-        },
-        template: '<div class="panel-footer" data-ng-transclude="">',
+        require: '^uiPanel', restrict: 'E', transclude: true, replace: true, scope: {
+            config: '=', class: '@'
+        }, template: '<div class="panel-footer" data-ng-transclude="">',
 
-        link: function(scope, element, attrs, panelController) {
-
-
-
-            //panelController.alert();
-
-            //element[0].appendChild(titleElement);
-
+        link: function (scope, element, attrs, panelController) {
 
         }
 
