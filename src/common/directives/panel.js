@@ -9,9 +9,16 @@
 directiveModule.directive('uiPanel', [function () {
 
     return {
-        restrict: 'E', transclude: true, replace: true, scope: {
-            id: '@', class: '=state', config: '=', show: '='
-        }, template: '<div class="panel panel-{{class}}" data-ng-transclude=""></div>', controller: function ($scope, $element, $attrs) {
+        restrict: 'E',
+        transclude: true,
+        replace: true,
+        scope: {
+            id: '@',
+            class: '=state',
+            config: '=',
+            show: '='
+        }, template: '<div class="panel panel-{{class}}" data-ng-transclude=""></div>',
+        controller: function ($scope, $element, $attrs) {
 
             var toggleHeader = function(isShown) {
 
@@ -21,12 +28,12 @@ directiveModule.directive('uiPanel', [function () {
 
                     if (!isShown) {
 
-                        collapseIcon.removeClass('glyphicon-chevron-right');
-                        collapseIcon.addClass('glyphicon-chevron-down');
+                        collapseIcon.removeClass('glyphicon-triangle-bottom');
+                        collapseIcon.addClass('glyphicon-triangle-top');
                     } else {
 
-                        collapseIcon.removeClass('glyphicon-chevron-down');
-                        collapseIcon.addClass('glyphicon-chevron-right');
+                        collapseIcon.removeClass('glyphicon-triangle-top');
+                        collapseIcon.addClass('glyphicon-triangle-bottom');
                     }
                 }
             };
@@ -134,11 +141,12 @@ directiveModule.directive('uiPanelHeader', function () {
         transclude: true,
         replace: true,
         scope: {
-            title: '@', config: '='
+            title: '@',
+            config: '='
         },
         template:   '<div class="panel-heading">' +
                     '    <div class="row">' +
-                    '        <div class="col-xs-6" data-ng-click="togglePanel();"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;<span class="panel-title">{{title}}</span></div>' +
+                    '        <div class="col-xs-6" data-ng-click="togglePanel();"><span class="glyphicon glyphicon-triangle-bottom"></span>&nbsp;<span class="panel-title">{{title}}</span></div>' +
                     '        <div class="col-xs-6"><div class="pull-right" data-ng-transclude=""></div></div>' +
                     '    </div>' +
                     '</div>',
@@ -172,7 +180,8 @@ directiveModule.directive('uiPanelBody', function () {
     return {
         require: '^uiPanel', restrict: 'E', transclude: true, replace: true, scope: {
             title: '@', config: '=', class: '@'
-        }, template: '<div class="panel-body" data-ng-transclude="">',
+        },
+        template: '<div class="panel-body" data-ng-transclude=""></div>',
 
         link: function (scope, element, attrs, panelController) {
 
@@ -197,7 +206,8 @@ directiveModule.directive('uiPanelFooter', function () {
 
     return {
         require: '^uiPanel', restrict: 'E', transclude: true, replace: true, scope: {
-            config: '=', class: '@'
+            config: '=',
+            class: '@'
         }, template: '<div class="panel-footer" data-ng-transclude="">',
 
         link: function (scope, element, attrs, panelController) {
