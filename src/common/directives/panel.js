@@ -6,12 +6,30 @@
  * @description
  * AngularJS version of the panels directive.
  */
-directiveModule.directive('uiPanel', ['panelService', function (panelService) {
+directiveModule.directive('uiPanel', [function () {
 
     return {
         restrict: 'E', transclude: true, replace: true, scope: {
             id: '@', class: '=state', config: '=', show: '='
         }, template: '<div class="panel panel-{{class}}" data-ng-transclude=""></div>', controller: function ($scope, $element, $attrs) {
+
+            var toggleHeader = function(isShown) {
+
+                if (null !== $element[0].querySelector('.panel > .panel-heading')) {
+
+                    var collapseIcon = angular.element($element[0].querySelector('.panel > .panel-heading > div.row > div > span.glyphicon'));
+
+                    if (!isShown) {
+
+                        collapseIcon.removeClass('glyphicon-chevron-right');
+                        collapseIcon.addClass('glyphicon-chevron-down');
+                    } else {
+
+                        collapseIcon.removeClass('glyphicon-chevron-down');
+                        collapseIcon.addClass('glyphicon-chevron-right');
+                    }
+                }
+            };
 
             var toggleBody = function (isShown) {
 
@@ -51,6 +69,7 @@ directiveModule.directive('uiPanel', ['panelService', function (panelService) {
 
             var togglePanel = function (isShown) {
 
+                toggleHeader(isShown);
                 toggleBody(isShown);
                 toggleFooter(isShown);
             }
@@ -94,11 +113,6 @@ directiveModule.directive('uiPanel', ['panelService', function (panelService) {
 
         link: function (scope, element, attrs) {
 
-            //// Decorate the element with the ID if exists.
-            //if (undefined !== typeof scope.id && scope.id.trim().length > 0) {
-            //
-            //    element.attr('id', scope.id);
-            //}
         }
     };
 
@@ -122,7 +136,12 @@ directiveModule.directive('uiPanelHeader', function () {
         scope: {
             title: '@', config: '='
         },
-        template: '<div class="panel-heading">' + '    <div class="row">' + '        <div class="col-xs-6" data-ng-click="togglePanel();"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;<span class="panel-title">{{title}}</span></div>' + '        <div class="col-xs-6"><div class="pull-right" data-ng-transclude=""></div></div>' + '    </div>' + '</div>',
+        template:   '<div class="panel-heading">' +
+                    '    <div class="row">' +
+                    '        <div class="col-xs-6" data-ng-click="togglePanel();"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;<span class="panel-title">{{title}}</span></div>' +
+                    '        <div class="col-xs-6"><div class="pull-right" data-ng-transclude=""></div></div>' +
+                    '    </div>' +
+                    '</div>',
 
         link: function (scope, element, attrs, panelController) {
 
