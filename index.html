@@ -5,8 +5,6 @@
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.css" />
 
-  <link rel="stylesheet" href="src/common/directives/panel/panel.css" />
-
   <script src="lib/angular/angular.js"></script>
 </head>
 <body data-ng-app="panelDemo" class="container">
@@ -30,8 +28,7 @@
 <footer></footer>
 <script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 <script src="src/common/directives/directiveModule.js"></script>
-<script src="src/common/directives/panel/panelService.js"></script>
-<script src="src/common/directives/panel/panel.js"></script>
+<script src="src/common/directives/panel.js"></script>
 <script>
   angular.module('panelDemo', ['ui.bootstrap', 'directiveModule']).controller('PanelDemoController', ['$scope', function($scope){
 
