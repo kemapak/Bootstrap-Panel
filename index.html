@@ -13,7 +13,7 @@
   <h2>Demo</h2>
 </header>
 <main data-ng-controller="PanelDemoController as ctrl">
-  <ui-panel id="simplePanel" data-state="model.panelState" data-config="model.panelConfig" data-show="model.panelConfig.show">
+  <ui-panel id="simplePanelExample1" data-contextual-class="model.panelContextualState" data-show="model.panelConfig.show">
     <ui-panel-header data-title="This is title">
       <button>click</button>Hello
     </ui-panel-header>
@@ -24,6 +24,55 @@
       This is the footer
     </ui-panel-footer>
   </ui-panel>
+
+  <hr>
+
+  <ui-panel id="simplePanelExample2" data-contextual-class="anotherModel.panelContextualState" data-show="anotherModel.panelConfig.show">
+    <ui-panel-header data-title="This is title">
+      Button section
+    </ui-panel-header>
+    <ui-panel-body>
+      This another panel.
+    </ui-panel-body>
+    <ui-panel-footer>
+      This is the footer
+    </ui-panel-footer>
+  </ui-panel>
+
+  <hr>
+
+  <ui-panel id="simplePanelExample3" data-contextual-class="yetAnotherModel.panelContextualState">
+    <ui-panel-header data-title="This is title">
+      Button section
+    </ui-panel-header>
+    <ui-panel-body>
+      This YET another panel.
+    </ui-panel-body>
+    <ui-panel-footer>
+      This is the footer
+    </ui-panel-footer>
+  </ui-panel>
+
+  <hr>
+
+  <ui-panel id="simplePanelExample4" data-contextual-class="anotherModel.panelContextualState">
+    <ui-panel-body>
+      Panel without header and footer
+    </ui-panel-body>
+  </ui-panel>
+
+  <hr>
+
+  <ui-panel id="simplePanelExample5" data-contextual-class="anotherModel.panelContextualState" data-show="anotherModel.panelConfig.show">
+    <ui-panel-header data-title="This is title">
+      Button section
+    </ui-panel-header>
+    <ui-panel-body>
+      Panel without footer
+    </ui-panel-body>
+  </ui-panel>
+
+
 </main>
 <footer></footer>
 <script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
@@ -32,17 +81,33 @@
 <script>
   angular.module('panelDemo', ['ui.bootstrap', 'directiveModule']).controller('PanelDemoController', ['$scope', function($scope){
 
-    var panelConfig = {
-      show: false,
-      someOtherConfig: {}
-    };
-
     var model = {
-      panelState: 'primary',
-      panelConfig: panelConfig
+      panelConfig: {
+        show: false,
+        someOtherConfig: {}
+      },
+      panelContextualState: 'panel-success'
+    }
+
+    var anotherModel = {
+      panelConfig: {
+        show: true
+      },
+      panelContextualState: 'panel-danger'
+    }
+
+    var yetAnotherModel = {
+      panelConfig: {
+
+      },
+      panelContextualState: 'panel-danger'
     }
 
     $scope.model = model;
+
+    $scope.anotherModel = anotherModel;
+
+    $scope.yetAnotherModel = yetAnotherModel;
 
     return {
 
